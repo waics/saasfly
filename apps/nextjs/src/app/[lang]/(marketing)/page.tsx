@@ -106,16 +106,15 @@ export default async function IndexPage({
                   </div>
                   <div className="flex flex-col items-center justify-start ml-8">
                     <div className="w-[340px]">
-                      <text className="font-semibold">9 </text>
-                      <text
-                        className="text-neutral-500 dark:text-neutral-400">{dict.marketing.contributors.contributors_desc}</text>
+                      <span className="font-semibold">9 </span>
+                      <span className="text-neutral-500 dark:text-neutral-400">{dict.marketing.contributors.contributors_desc}</span>
                     </div>
                     <div className="w-[340px]">
-                      <text
-                        className="text-neutral-500 dark:text-neutral-400">{dict.marketing.contributors.developers_first}</text>
+                      <span
+                        className="text-neutral-500 dark:text-neutral-400">{dict.marketing.contributors.developers_first}</span>
                       <ColourfulText text="2000"/>
-                      <text
-                        className="text-neutral-500 dark:text-neutral-400">{dict.marketing.contributors.developers_second}</text>
+                      <span
+                        className="text-neutral-500 dark:text-neutral-400">{dict.marketing.contributors.developers_second}</span>
                     </div>
                   </div>
                 </div>

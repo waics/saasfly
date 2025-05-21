@@ -15,7 +15,7 @@ interface MainNavProps {
   params: {
     lang: string;
   };
-  marketing: Record<string, string>;
+  marketing?: Record<string, string | object>;
 }
 
 export function MainNav({ items, children, params: { lang }, marketing }: MainNavProps) {
@@ -35,7 +35,7 @@ export function MainNav({ items, children, params: { lang }, marketing }: MainNa
 
         <Link href="https://docs.saasfly.io" target="_blank" className="ml-4 hidden md:flex lg:flex xl:flex">
           <DocumentGuide>
-            {marketing?.introducing ?? "Introducing Saasfly"}
+            {typeof marketing?.introducing === "string" ? marketing?.introducing : "Introducing Saasfly"}
           </DocumentGuide>
         </Link>
       </div>

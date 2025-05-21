@@ -2,7 +2,7 @@
 
 import React from "react";
 import Link from "next/link";
-import type { User } from "next-auth";
+import type { User } from "@saasfly/auth";
 import { useSelectedLayoutSegment } from "next/navigation";
 
 import { cn } from "@saasfly/ui";
@@ -17,8 +17,6 @@ import { UserAccountNav } from "./user-account-nav";
 import useScroll from "~/hooks/use-scroll";
 import type { MainNavItem } from "~/types";
 
-type Dictionary = Record<string, string>;
-
 interface NavBarProps {
   user: Pick<User, "name" | "image" | "email"> | undefined;
   items?: MainNavItem[];
@@ -28,7 +26,7 @@ interface NavBarProps {
   params: {
     lang: string;
   };
-  marketing: Dictionary;
+  marketing: Record<string, string | object>;
   dropdown: Record<string, string>;
 }
 

@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { signIn } from "next-auth/react";
+import { OAuthStrategy } from "@clerk/types";
+import { useSignIn } from "@clerk/nextjs";
 
 import { Button } from "@saasfly/ui/button";
 import * as Icons from "@saasfly/ui/icons";
@@ -11,9 +12,32 @@ import { Modal } from "~/components/modal";
 import { siteConfig } from "~/config/site";
 import { useSigninModal } from "~/hooks/use-signin-modal";
 
-export const SignInModal = ({ dict }: { dict: Record<string, string> }) => {
+export const SignInClerkModal = ({ dict }: { dict: Record<string, string> }) => {
   const signInModal = useSigninModal();
   const [signInClicked, setSignInClicked] = useState(false);
+  const { signIn } = useSignIn();
+
+  if (!signIn) {
+    return null
+  }
+
+  const signInWith = (strategy: OAuthStrategy) => {
+    return signIn
+      .authenticateWithRedirect({
+        strategy,
+        redirectUrl: '/sign-in/sso-callback',
+        redirectUrlComplete: '/',
+      })
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err: any) => {
+        // See https://clerk.com/docs/custom-flows/error-handling
+        // for more info on error handling
+        console.log(err.errors)
+        console.error(err, null, 2)
+      })
+  }
 
   return (
     <Modal showModal={signInModal.isOpen} setShowModal={signInModal.onClose}>
@@ -38,15 +62,16 @@ export const SignInModal = ({ dict }: { dict: Record<string, string> }) => {
             disabled={signInClicked}
             onClick={() => {
               setSignInClicked(true);
-              signIn("github", { redirect: false })
-                .then(() =>
-                  setTimeout(() => {
-                    signInModal.onClose();
-                  }, 1000),
-                )
-                .catch((error) => {
-                  console.error("signUp failed:", error);
-                });
+              signInWith('oauth_github')
+              // signIn("github", { redirect: false })
+              //   .then(() =>
+              //     setTimeout(() => {
+              //       signInModal.onClose();
+              //     }, 1000),
+              //   )
+              //   .catch((error) => {
+              //     console.error("signUp failed:", error);
+              //   });
             }}
           >
             {signInClicked ? (

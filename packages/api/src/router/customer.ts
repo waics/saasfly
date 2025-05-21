@@ -1,8 +1,7 @@
 import { unstable_noStore as noStore } from "next/cache";
-import { getServerSession } from "next-auth/next";
 import { z } from "zod";
 
-import { authOptions } from "@saasfly/auth";
+import { getCurrentUser } from "@saasfly/auth";
 import { db, SubscriptionPlan } from "@saasfly/db";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -22,8 +21,8 @@ export const customerRouter = createTRPCRouter({
     .input(updateUserNameSchema)
     .mutation(async ({ input }) => {
       const { userId } = input;
-      const session = await getServerSession(authOptions);
-      if (!session?.user || userId !== session?.user.id) {
+      const user = await getCurrentUser();
+      if (!user || userId !== user.id) {
         return { success: false, reason: "no auth" };
       }
       await db

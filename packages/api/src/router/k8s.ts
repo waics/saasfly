@@ -1,9 +1,7 @@
-import { unstable_noStore as noStore } from "next/cache";
 import { TRPCError } from "@trpc/server";
-import { getServerSession } from "next-auth/next";
 import { z } from "zod";
 
-import { authOptions } from "@saasfly/auth";
+import { getCurrentUser } from "@saasfly/auth";
 import { db, SubscriptionPlan } from "@saasfly/db";
 
 import { createTRPCRouter, protectedProcedure } from "../trpc";
@@ -20,9 +18,9 @@ const k8sClusterDeleteSchema = z.object({
 
 export const k8sRouter = createTRPCRouter({
   getClusters: protectedProcedure.query(async (opts) => {
-    const session = await getServerSession(authOptions);
+    const user = await getCurrentUser();
     const userId = opts.ctx.userId! as string;
-    if (!session) {
+    if (!user) {
       return;
     }
     return await db
@@ -36,8 +34,8 @@ export const k8sRouter = createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.userId! as string;
 
-      const session = await getServerSession(authOptions);
-      if (!session) {
+      const user = await getCurrentUser();
+      if (!user) {
         throw new TRPCError({
           code: "UNAUTHORIZED",
           message: "You must be logged in to create a cluster",
