@@ -65,7 +65,7 @@ export const metadata = {
   },
   icons: {
     icon: "/logo.svg",
-    shortcut: "/favicon-16x16.png",
+    // shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
   metadataBase: new URL("https://show.saasfly.io/"),
