@@ -3,7 +3,7 @@
 import * as React from "react";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import type { User } from "next-auth";
+import type { User } from "@saasfly/auth";
 import { useForm } from "react-hook-form";
 import type * as z from "zod";
 

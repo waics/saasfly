@@ -22,11 +22,13 @@ export const SignInClerkModal = ({ dict }: { dict: Record<string, string> }) => 
   }
 
   const signInWith = (strategy: OAuthStrategy) => {
+    const protocol = window.location.protocol
+    const host = window.location.host
     return signIn
       .authenticateWithRedirect({
         strategy,
         redirectUrl: '/sign-in/sso-callback',
-        redirectUrlComplete: '/',
+        redirectUrlComplete: `${protocol}//${host}/dashboard`,
       })
       .then((res) => {
         console.log(res)
@@ -62,16 +64,12 @@ export const SignInClerkModal = ({ dict }: { dict: Record<string, string> }) => 
             disabled={signInClicked}
             onClick={() => {
               setSignInClicked(true);
-              signInWith('oauth_github')
-              // signIn("github", { redirect: false })
-              //   .then(() =>
-              //     setTimeout(() => {
-              //       signInModal.onClose();
-              //     }, 1000),
-              //   )
-              //   .catch((error) => {
-              //     console.error("signUp failed:", error);
-              //   });
+              void signInWith('oauth_github')
+                .then(() => {
+                  setTimeout(() => {
+                    signInModal.onClose();
+                  }, 1000)
+                })
             }}
           >
             {signInClicked ? (

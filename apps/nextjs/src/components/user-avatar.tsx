@@ -1,5 +1,5 @@
 import type { AvatarProps } from "@radix-ui/react-avatar";
-import type { User } from "next-auth";
+import type { User } from "@saasfly/auth";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@saasfly/ui/avatar";
 import * as Icons from "@saasfly/ui/icons";

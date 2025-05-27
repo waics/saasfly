@@ -87,7 +87,7 @@ export const middleware = clerkMiddleware(async (auth, req: NextRequest) => {
     }
   }
 
-  const isAuthPage = /^\/[a-zA-Z]{2,}\/(login|register)/.test(
+  const isAuthPage = /^\/[a-zA-Z]{2,}\/(login|register|login-clerk)/.test(
     req.nextUrl.pathname,
   );
   const isAuthRoute = req.nextUrl.pathname.startsWith("/api/trpc/");
@@ -112,7 +112,7 @@ export const middleware = clerkMiddleware(async (auth, req: NextRequest) => {
       from += req.nextUrl.search;
     }
     return NextResponse.redirect(
-      new URL(`/${locale}/login?from=${encodeURIComponent(from)}`, req.url),
+      new URL(`/${locale}/login-clerk?from=${encodeURIComponent(from)}`, req.url),
     );
   }
 })

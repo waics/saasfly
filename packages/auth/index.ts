@@ -18,7 +18,7 @@ declare global {
 
 export const authOptions = {
   pages: {
-    signIn: "/login",
+    signIn: "/login-clerk",
   },
 }
 
