@@ -1,42 +1,82 @@
-"use server";
-
 import "server-only";
 
-import { cookies, headers } from "next/headers";
-import { loggerLink } from "@trpc/client";
-import { experimental_createTRPCNextAppDirServer } from "@trpc/next/app-dir/server";
+import {cookies, headers} from "next/headers";
+import {createTRPCProxyClient, loggerLink, TRPCClientError} from "@trpc/client";
+import {experimental_createTRPCNextAppDirServer} from "@trpc/next/app-dir/server";
 
-import type { AppRouter } from "@saasfly/api";
+import {AppRouter} from "@saasfly/api";
 
-import { endingLink, transformer } from "./shared";
+import {endingLink, transformer} from "./shared";
+import {observable} from "@trpc/server/observable";
+import { callProcedure } from "@trpc/server";
+import {TRPCErrorResponse} from "@trpc/server/rpc";
+import { cache } from "react";
+import {NextRequest} from "next/server";
+import { appRouter } from "../../../../packages/api/src/root";
+import { getAuth } from "@clerk/nextjs/server";
 
-export const trpc = experimental_createTRPCNextAppDirServer<AppRouter>({
-  config() {
+type AuthObject = ReturnType<typeof getAuth>;
+
+export const createTRPCContext = async (opts: {
+    headers: Headers;
+    auth: AuthObject;
+}) => {
     return {
-      ssr: true,
-      transformer,
-      links: [
-        // loggerLink({
-        //   enabled: (opts) =>
-        //     process.env.NODE_ENV === "development" ||
-        //     (opts.direction === "down" && opts.result instanceof Error),
-        // }),
-        loggerLink({
-          enabled: () => true,
-        }),
-        endingLink({
-          headers: () => {
-            const h = new Map(headers());
-            h.delete("connection");
-            h.delete("transfer-encoding");
-            h.set("x-trpc-source", "server");
-            h.set("cookie", cookies().toString());
-            return Object.fromEntries(h.entries());
-          },
-        }),
-      ],
+        userId: opts.auth.userId,
+        ...opts,
     };
-  },
+};
+
+
+/**
+ * This wraps the `createTRPCContext` helper and provides the required context for the tRPC API when
+ * handling a tRPC call from a React Server Component.
+ */
+const createContext = cache(() => {
+    return createTRPCContext({
+        headers: new Headers({
+            cookie: cookies().toString(),
+            "x-trpc-source": "rsc",
+        }),
+        auth: getAuth(
+            new NextRequest("https://next-template-git-feature-clerk-saasfly.vercel.app/", {headers: headers()}),
+        ),
+    });
 });
 
-export { type RouterInputs, type RouterOutputs } from "@saasfly/api";
+export const api = createTRPCProxyClient<AppRouter>({
+    transformer,
+    links: [
+        loggerLink({
+            enabled: (op) =>
+                process.env.NODE_ENV === "development" ||
+                (op.direction === "down" && op.result instanceof Error),
+        }),
+        /**
+         * Custom RSC link that lets us invoke procedures without using http requests. Since Server
+         * Components always run on the server, we can just call the procedure as a function.
+         */
+        () =>
+            ({op}) =>
+                observable((observer) => {
+                    createContext()
+                        .then((ctx) => {
+                            return callProcedure({
+                                procedures: appRouter._def.procedures,
+                                path: op.path,
+                                rawInput: op.input,
+                                ctx,
+                                type: op.type,
+                            });
+                        })
+                        .then((data) => {
+                            observer.next({result: {data}});
+                            observer.complete();
+                        })
+                        .catch((cause: TRPCErrorResponse) => {
+                            observer.error(TRPCClientError.from(cause));
+                        });
+                }),
+    ],
+});
+export {type RouterInputs, type RouterOutputs} from "@saasfly/api";

@@ -11,16 +11,16 @@ interface CreateContextOptions {
 }
 
 // see: https://clerk.com/docs/references/nextjs/trpc
-export const createTRPCContext = async (opts: { headers: Headers }) => {
-  const user = await currentUser();
-
+export const createTRPCContext = async () => {
   return {
-    user,
-    ...opts,
+    auth: await auth(),
+    user: await currentUser(),
   };
 };
 
-export const t = initTRPC.context<typeof createTRPCContext>().create({
+export type TRPCContext = Awaited<ReturnType<typeof createTRPCContext>>;
+
+export const t = initTRPC.context<TRPCContext>().create({
   transformer,
   errorFormatter({ shape, error }) {
     return {
