@@ -42,7 +42,7 @@ See more documentation at <https://document.saasfly.io>
     <td>
       <a href="https://go.clerk.com/uKDp7Au">
         <picture>
-          <img style="width: 50px;" alt="Clerk" src="/clerk.svg">
+          <img style="width: 50px;" alt="Clerk" src="/clerk.png">
         </picture>
       </a>
     </td>
