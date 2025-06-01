@@ -38,29 +38,34 @@ See more documentation at <https://document.saasfly.io>
 ## Sponsors
 
 <table>
-  <tr >
+  <tr>
+    <td>
+      <a href="https://go.clerk.com/uKDp7Au">
+        <picture>
+          <img style="width: 50px;" alt="Clerk" src="/clerk.svg">
+        </picture>
+      </a>
+    </td>
     <td>
       <a href="https://www.twillot.com/">
         <picture>
-          <img alt="Take Control of All Your Twitter Assets" src="/twillot.png">
+          <img style="width: 50px;" alt="Take Control of All Your Twitter Assets" src="/twillot.png">
         </picture>
       </a>
     </td>
     <td>
       <a href="https://www.setupyourpay.com/" title="如何注册美国公司进行收款">
         <picture>
-          <img alt="全球收款手册" src="/setupyourpay.png">
+          <img style="width: 50px;" alt="全球收款手册" src="/setupyourpay.png">
         </picture>
-      </a>
-    </td>
-  <tr >
-    <td >
-      <a href="mailto:contact@nextify.ltd">
-        Add your logo here
       </a>
     </td>
   </tr>
 </table>
+
+<a href="mailto:contact@nextify.ltd">
+  Add your logo here
+</a>
 
 ## 🚀 Getting Started
 

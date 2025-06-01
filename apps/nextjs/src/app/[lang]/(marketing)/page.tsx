@@ -138,6 +138,9 @@ export default async function IndexPage({
         <div className="flex flex-col justify-center items-center pt-10">
           <div className="text-lg text-neutral-500 dark:text-neutral-400">{dict.marketing.sponsor.title}</div>
           <div className="mt-4 flex items-center gap-4">
+            <Link href="https://go.clerk.com/uKDp7Au" target="_blank">
+              <Image src="/images/clerk.svg" width="64" height="64" alt="twillot"/>
+            </Link>
             <Link href="https://www.twillot.com/" target="_blank">
               <Image src="https://www.twillot.com/logo-128.png" width="48" height="48" alt="twillot"/>
             </Link>
