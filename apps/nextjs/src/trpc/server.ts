@@ -11,7 +11,7 @@ import { callProcedure } from "@trpc/server";
 import { TRPCErrorResponse } from "@trpc/server/rpc";
 import { cache } from "react";
 import { appRouter } from "../../../../packages/api/src/root";
-import { auth } from "@clerk/nextjs/server";
+import { auth } from "@saasfly/auth/nextauth";
 
 type AuthObject = Awaited<ReturnType<typeof auth>>;
 
@@ -21,7 +21,8 @@ export const createTRPCContext = async (opts: {
 // eslint-disable-next-line @typescript-eslint/require-await
 }) => {
   return {
-    userId: opts.auth.userId,
+    userId: opts.auth?.user?.id,
+    user: opts.auth?.user,
     ...opts,
   };
 };

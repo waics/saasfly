@@ -19,7 +19,8 @@ export default async function MarketingLayout({
   };
 }) {
   const dict = await getDictionary(lang);
-  const user = await getCurrentUser();
+  // const user = await getCurrentUser(); // Temporarily disabled due to DB connection issues
+  const user = undefined;
   return (
     <div className="flex min-h-screen flex-col">
       <Suspense fallback="...">
